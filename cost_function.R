@@ -1,22 +1,19 @@
-set.seed(1)
-X <- matrix(rnorm(1000), ncol=10) # some random data
-Y <- sample(0:1, 100, replace=TRUE)
 
-# Implement Sigmoid function
-sigmoid <- function(z) {
-  g <- 1/(1+exp(-z))
-  return(g)
+library(reshape2)
+#================================================#
+## cost function state ##
+#================================================#
+# MSE #
+
+if (is.null(dat.fitting)) { # dat.fitting  = data
+  MSE<- out
+}else {
+  rss<- sum(sapply(c("Wirte each variable name "), function(nm) { # Add when required variables are present
+    
+    o.time<- as.character(dat.fitting [dat.fitting$year == nm,"year"]) #  Data required must be year For time series data that does not include year, reference date when data is measured is required
+    
+    sum((out [, nm ][match(o.time, out [, "year"])] - dat.fitting [dat.fitting$year == nm, "population"])^2, na.rm = TRUE) # When the data shape is changed to melt, the value of value must be expressed.
+  }))/(2*nrow(dat.fitting))
 }
+return(MSE)
 
-cost.glm <- function(theta,X) {
-  m <- nrow(X)
-  g <- sigmoid(X%*%theta)
-  (1/m)*sum((-Y*log(g)) - ((1-Y)*log(1-g)))
-}
-
-X1 <- cbind(1, X)
-out<-optim(par=rep(0,ncol(X1)), fn = cost.glm, method='CG',
-      X=X1, control=list(trace=TRUE))
-
-glm(Y~X, family=binomial)$coefficients
-out

@@ -1,35 +1,3 @@
-
-#================================================#
-#================================================#
-Thomson.fn<- function(x) {
-  fn.call<<- fn.call + 1
-  x <- matrix(x, ncol = 2)
-  y <- t(apply(x, 1, function(z) {
-    c(sin(z [1]) * cos(z [2]),
-      sin(z [1]) * sin(z [2]), cos(z [1])) }))
-  n <- nrow(x)
-  tmp<- matrix(NA, nrow = n, ncol = n)
-  index<- cbind(as.vector(row(tmp)), as.vector(col(tmp)))
-  index<- index [index [, 1] < index [, 2],, drop=F]
-  rdist<- apply(index, 1, function(z) {
-    tmp<- 1/sqrt(sum((y [z [1],] - y [z [2],])^2))
-  })
-  res<- sum(rdist)
-  return(res)
-}
-
-
-n.particles<- 6
-lower.T<-rep(0, 2 * n.particles)
-upper.T<- c(rep(pi, n.particles), rep(2 * pi, n.particles))
-options(digits = 9)
-fn.call<- 0
-
-out.GenSA<- GenSA(par = NULL, lower = lower.T, upper = upper.T,fn = Thomson.fn, 
-                  control = list(max.call=600))
-
-print(out.GenSA[c("value", "counts")])
-
 #================================================#
 #================================================#
 
@@ -82,7 +50,7 @@ print(round(res$par, digits = 6))
 
 #================================================#
 df1<- function(t, y, parameters) {
-  
+
   d_parent<- 99.5984880305-parameters[1]*y["parent"]-0.050778*y ["parent"]
   d_m1 <- parameters[3]*y["parent"]-parameters [2]* y ["m1"]
   return(list(c(d_parent, d_m1)))
@@ -91,31 +59,67 @@ df1<- function(t, y, parameters) {
 #================================================#
 
 
-x<-c(99.5984880305,0.0479201577,0.0507776401,0.0052606502)
-m1_0 = 0
-names_x = c("parent_0", "k_parent_sink", "k_parent_m1","k_m1_sink")
-names(x) <- names_x
-y0 <- c(x ["parent_0"], m1_0)
-names_y = c("parent0", "m1")
-names(y0) <- names_y
-parameters<- x [c("k_parent_sink", "k_parent_m1", "k_m1_sink")]
-out<- ode(y0, seq(0,120,1), df1, parameters)
+# x<-c(99.5984880305,0.0479201577,0.0507776401,0.0052606502)
+# m1_0 = 0
+# names_x = c("parent_0", "k_parent_sink", "k_parent_m1","k_m1_sink")
+# names(x) <- names_x
+# y0 <- c(x ["parent_0"], m1_0)
+# names_y = c("parent0", "m1")
+# names(y0) <- names_y
+# parameters<- x [c("k_parent_sink", "k_parent_m1", "k_m1_sink")]
+# out<- ode(y0, seq(0,120,1), df1, parameters)
 
 #================================================#
 data<-as.data.frame(FOCUS_2006_D)
 data1<-data[seq(1,22),]
-data2<-data[seq(23,44),]
-data3<-cbind(data[seq(1,11),1],as.data.frame(melt(out[,2])))
-colnames(data3)<-c("name","value")
-data4<-cbind(as.data.frame(out[,1]),data3)
-colnames(data4)<-c("time","name","value")
+# data2<-data[seq(23,44),]
+# data3<-cbind(data[seq(1,11),1],as.data.frame(melt(out[,2])))
+# colnames(data3)<-c("name","value")
+# data4<-cbind(as.data.frame(out[,1]),data3)
+# colnames(data4)<-c("time","name","value")
+# 
+# #================================================#
 
-#================================================#
-plot3<-ggplot(data = data1,aes(x=time,y=value))+geom_point()
-plot4<-ggplot(data = data2,aes(x=time,y=value))+geom_point()
+plot<-ggplot(data = data,aes(x=time,y=value))+geom_point(aes(color=name))
+plot
+# plot3<-ggplot(data = data1,aes(x=time,y=value))+geom_point()
+# plot4<-ggplot(data = data2,aes(x=time,y=value))+geom_point()
+# 
+# plot5<-ggplot(data = as.data.frame(out),aes(x=time,y=parent0))+geom_line()
+# plot5
+# 
+# plot(out)
 
-plot5<-ggplot(data = as.data.frame(out),aes(x=time,y=parent0))+geom_line()
-plot5
 
-plot(out)
+
+df<- function(t, y, parameters) {
+  d_parent<- -parameters[1]*y[1]-parameters[2] * y [1]
+  d_m1 <- parameters[2]*y[1] - parameters [3]* y [2]
+  return(list(c(d_parent, d_m1)))
+}
+tspan = if (!is.null(FOCUS_2006_D)) sort(unique(FOCUS_2006_D [["time"]])) else NULL
+y0<-c(99.598491,0)
+parameters<-c("k_parent_sink" = 0.047920, "k_parent_m1" = 0.050778, "k_m1_sink" = 0.005261)
+out <- ode(y0, tspan, df, parameters)
+out[,1]
+colnames(out) <- c("time","fit_patent","fit_m1")
+out1<-melt(out,id.vars = c("time"))[seq(12,33),seq(2,3,1)]
+colnames(out1)<-c("name","value")
+out2<-cbind(out1,out[,1])
+colnames(out2)<-c("name","value","time")
+out2
+data
+data1<-rbind(out2,data)
+data1<-as.data.frame(data1)
+
+
+library(gridExtra)
+
+cast()
+
+
+plot<-ggplot(data = data1[seq(23,66),],aes(x=time,y=value))+geom_point(aes(color=name))
+plot
+plot1<-plot+geom_line(data = data1[seq(1,22),],aes(x=time,y=value,color=name))+geom_point(aes(color=name))
+plot1
 
