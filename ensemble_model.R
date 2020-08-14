@@ -1,8 +1,8 @@
 #set work space
 
-setwd("~/Documents/GitHub/HIV")
+setwd("~/Desktop")
 library(readr)
-pop <- read_csv(".csv")
+pop <- read_csv("data.csv")
 data<-as.data.frame(pop)
 
 

@@ -1,10 +1,3 @@
-#set work space
-
-setwd("~/Documents/GitHub/HIV")
-library(readr)
-pop <- read_csv("sammod.csv")
-data<-as.data.frame(pop)
-data
 
 
 
