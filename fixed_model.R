@@ -1,7 +1,8 @@
+
+library(deSolve)
+
 HIV.model<-function(year, state_values, parameters){
   with(as.list(c(state_values, parameters)),{
-    
-    dN = S + G + U_S + D_S + U_G + D_G + A_S + A_G
     
     dS   = rho_A * N - rho_B * (1-omega_C) * S - beta_A * gamma_A * (1-omega_A) * (1-omega_D) * S * eta_A - beta_B * gamma_A * (1-omega_A) * (1-omega_D) * S * eta_A - mu_A * S
     
@@ -21,16 +22,16 @@ HIV.model<-function(year, state_values, parameters){
     
     dD   = mu_A*(S+G+U_S+D_S+U_G+D_G)+mu_B*(A_S+A_G)
 
-    return(list(c(dN,dS, dG, dU_S, dD_S, dU_G, dD_G, dA_S,dA_G,dD)))
+    return(list(c(dS, dG, dU_S, dD_S, dU_G, dD_G, dA_S,dA_G,dD)))
   })
 }
 
-paramaters_list<-c(rho_A = 0.0053 ,rho_B =0.005 , omega_A =0.3 ,omega_B = 0.15 ,omega_C = 0.1 ,
+paramaters_list<-c(rho_A = 0.01 ,rho_B =0.005 , omega_A =0.3 ,omega_B = 0.15 ,omega_C = 0.1 ,
                   omega_D = 0.1 ,gamma_A = 0.0003,gamma_B = 0.0003 , beta_A = 0.0003, beta_B = 0.0003, beta_C = 0.0005,beta_D = 0.0007,mu_A = 0.003,mu_B = 0.01,
                   tau_A = 0.07 ,tau_B = 0.12,eta_A = 0.098 ,eta_B = 0.19,sigma_A = 0.0005,sigma_B= 0.0005,sigma_C= 0.0005,sigma_D= 0.0005)
 
 # the initial values of variables:
-initial_values<- c( N = 16700000, S = 16500000, U_S = 1500 , D_S = 1000, G = 143066, U_G = 9000 ,D_G = 7000,A_S = 100 ,A_G = 200, D=100)
+initial_values<- c( S = 16500000, U_S = 1500 , D_S = 1000, G = 143066, U_G = 9000 ,D_G = 7000,A_S = 100 ,A_G = 200, D=100)
 times <-seq(2010,2015,1)
 # solving
 
