@@ -14,9 +14,7 @@ HIV <- function(year, state_values, parameters) {
     
     dIg<- (1-gamma2)*(1-tau2)*(omega4)*(Ig/(Ig+G))*G-d2*Ig               
     
-    dD <- d1*Ym+d1*Yw+d1*G+d2*Im+d2*Iw+d2*Ig
-    
-    return(list(c(dYm, dYw, dG, dIm, dIw, dIg, dD)))
+    return(list(c(dYm, dYw, dG, dIm, dIw, dIg)))
   })
 }
 
@@ -35,9 +33,20 @@ HIV.model = function(data, parameters){
            gamma1=0,gamma2=0,omega1=parameters[2],omega2=parameters[3],
            omega4=parameters[4],d1=0.007165862,d2=parameters[5],M=246538,W=257026)
   
+  Ym= 16380526
+  Yw =16576010
+  G =131045
+  Im = 1951
+  Iw = 7
+  Ig = 5854
+  D = 236162
   
-  init<-c(Ym= 16380526,Yw =16576010, G =131045,
-          Im = 1951,Iw = 7,Ig = 5854,D = 236162)
+  N_M = Ym + Im
+  N_W = Yw + Im
+  N_G = G +  Ig
+  
+  init<-c(Ym= Ym/N_M,Yw =Yw/N_W, G =G/N_G,
+          Im = Im/N_M,Iw = Iw/N_W,Ig = Ig/N_G)
   
   time<-seq(1992,2018,1)
   
