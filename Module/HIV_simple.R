@@ -1,21 +1,23 @@
 #Simple Interaction Model
 #================================================#
 library(deSolve)
-HIV_R <- function(paramters, M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
+HIV_R <- function(paramters,N_M0 =19084999, N_W0 = 18258526,M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
   
   derivs <-function(time,initial,paramters){
     
     with(as.list(c(paramters,initial)), {
-      dM   <- lambda_1 - beta  * M * I_W  - mu_1 * M
-      dW   <- lambda_2 - gamma * W * I_M  - mu_1 * W
-      dI_M <-            beta  * M * I_W  - mu_2 * I_M
-      dI_W <-            gamma * W * I_M  - mu_2 * I_W
+      dN_M <- M + I_M - mu_1 * M - mu_2 * I_M
+      dN_W <- W + I_W - mu_1 * W - mu_2 * I_W
+      dM   <- N_M * lambda - beta  * M * I_W  - mu_1 * M
+      dW   <- N_W * lambda - gamma * W * I_M  - mu_1 * W
+      dI_M <-            beta  * M * I_W  - mu_1 * I_M - mu_2 * I_M
+      dI_W <-            gamma * W * I_M  - mu_1 * I_W - mu_2 * I_W
       
-      return(list(c(dM,dW,dI_M,dI_W)))
+      return(list(c(dN_M,dN_W,dM,dW,dI_M,dI_W)))
     })
   }
   
-  y <- c(M = M_0, W = W_0, I_M = I_M0, I_W = I_W0)
+  y <- c(N_M = N_M0,N_W = N_W0 ,M = M_0, W = W_0, I_M = I_M0, I_W = I_W0)
   
   times <-seq(2012,2018,1)
   
@@ -25,7 +27,7 @@ HIV_R <- function(paramters, M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
   
 }
 
-parameters<-c(lambda_1 = 248958,lambda_2 = 235592, beta = 0.00000024, gamma = 0.00000000056, mu_1 = 0.051, mu_2 = 0.12)
+parameters<-c(lambda = 0.005, beta = 0.000000024, gamma = 0.0000000004, mu_1 = 0.005825, mu_2 = 0.1642)
 out<- HIV_R(parameters)
 out
 
@@ -37,16 +39,21 @@ out
 #http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_2KAA206_OECD
 #================================================#
 
+
+
 M   <-c(19078308,19135522,19183788,19254023,19295973,19220448,19172749)
 W   <-c(18257974,18313807,18360250,18429033,18477966,18404820,18362314)
 
 I_M <-c(6691,7436,8248,9010,9788,10489,11236)
 I_W <-c(552,593,624,658,690,716,742)
 
+N_M <-M+I_M
+N_W <-W+I_W  
+
 times <-seq(2012,2018,1)
 
-HIV_data<-cbind(times,M,W,I_M,I_W)
-HIV_data<-as.data.frame(HIV_data)
+HIV_data<-cbind(times,N_M,N_W,M,W,I_M,I_W)
+HIV_data<-data.frame(HIV_data)
 #================================================#
 #================================================#
 
@@ -63,33 +70,35 @@ library(GenSA)
 derivs <-function(time,initial,paramters){
   
   with(as.list(c(paramters,initial)), {
-    dM   <- lambda_1 - beta  * M * I_W  - mu_1 * M
-    dW   <- lambda_2 - gamma * W * I_M  - mu_1 * W
-    dI_M <-            beta  * M * I_W  - mu_2 * I_M
-    dI_W <-            gamma * W * I_M  - mu_2 * I_W
+    dN_M <- M + I_M - mu_1 * M - mu_2 * I_M
+    dN_W <- W + I_W - mu_1 * W - mu_2 * I_W
+    dM   <- N_M * lambda - beta  * M * I_W  - mu_1 * M
+    dW   <- N_W * lambda - gamma * W * I_M  - mu_1 * W
+    dI_M <-            beta  * M * I_W  - mu_1 * I_M - mu_2 * I_M
+    dI_W <-            gamma * W * I_M  - mu_1 * I_W - mu_2 * I_W
     
-    return(list(c(dM,dW,dI_M,dI_W)))
+    return(list(c(dN_M,dN_W,dM,dW,dI_M,dI_W)))
   })
 }
 
 
 HIV_R <- function(data,parameters){
   
-  M_0 <- as.vector(data[1,2])
-  W_0 <- as.vector(data[1,3])
-  I_M0 <- as.vector(data[1,4])
-  I_W0 <- as.vector(data[1,5])
+  M_0 <- as.vector(data[1,4])
+  W_0 <- as.vector(data[1,5])
+  I_M0 <- as.vector(data[1,6])
+  I_W0 <- as.vector(data[1,7])
   
-  y <- c(M = data[1,2], W = data[1,3], I_M = data[1,4], I_W = data[1,5])
+  y <- c(N_M = data[1,2], N_W = data[1,3],M = data[1,4], W = data[1,5], I_M = data[1,6], I_W = data[1,7])
   
   times <-seq(2012,2018,1)
   
-  parameters<-c(lambda_1 = 248958,lambda_2 =235592, beta = parameters[1], gamma = parameters[2], mu_1 = 0.051, mu_2 = 0.12)
+  parameter<-c(lambda = 0.005, beta = parameters[1], gamma = parameters[2], mu_1 = 0.005825, mu_2 = 0.1642)
   
-  M_0_predicted <- as.vector(ode(y, times, derivs,parameters)[,2])
-  W_0_predicted <- as.vector(ode(y, times, derivs,parameters)[,3])
-  I_M0_predicted <- as.vector(ode(y, times, derivs,parameters)[,4])
-  I_W0_predicted <- as.vector(ode(y, times, derivs,parameters)[,5])
+  M_0_predicted <- as.vector(ode(y, times, derivs,parameter)[,4])
+  W_0_predicted <- as.vector(ode(y, times, derivs,parameter)[,5])
+  I_M0_predicted <- as.vector(ode(y, times, derivs,parameter)[,6])
+  I_W0_predicted <- as.vector(ode(y, times, derivs,parameter)[,7])
   
   # RMSE<-sqrt((sum(I_M0 - I_M0_predicted)^2 )/(ncol(data)))
   RMSE<-sqrt((sum(I_W0 - I_W0_predicted)^2 )/(ncol(data)))
@@ -106,13 +115,21 @@ dimension <- 2
 # upper <- rep(1, dimension)
 
 lower <- rep(0, dimension)
-upper <- rep(0.0001, dimension)
+upper <- rep(1, dimension)
 
 out <- GenSA(par<-c(0.00000002,0.00000002), lower = lower, upper = upper, fn = HIV_R,
              control=list(max.call=10^3,verbose=TRUE),data = HIV_data )
 out
 out[c("value","par","counts")]
 ou1<- as.data.frame(out[c("trace.mat")])
+
+
+
+
+
+
+
+
 
 #================================================#
 ## visualizae optimization function state ##
@@ -144,7 +161,7 @@ print(plot2)
 #  max.call 4 * 10^5,  RMSE = 3822.926 //  7.580485e-06 0.000000e+00
 
 
-HIV_R <- function(paramters, M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
+HIV_R <- function(paramters, paramters,N_M0 =19084999, N_W0 = 18258526,M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
   
   derivs <-function(time,initial,paramters){
     
@@ -169,7 +186,7 @@ HIV_R <- function(paramters, M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
 }
 
 # parameters<-c(lambda_1 = 248958,lambda_2 =235592, beta = 7.580485e-06, gamma = 0.000000e+00, mu_1 = 0.051, mu_2 = 0.12)
-parameters<-c(lambda_1 = 248958,lambda_2 =235592, beta = 7.747783e-09, gamma = 0.000000e+00, mu_1 = 0.051, mu_2 = 0.12)
+parameters<-c(lambda = 0.005, beta = 0.000000024, gamma = 0.0000000004, mu_1 = 0.005825, mu_2 = 0.1642)
 
 out<- HIV_R(parameters)
 cumsum(out$I_M)
