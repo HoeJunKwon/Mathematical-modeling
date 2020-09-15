@@ -7,7 +7,7 @@ HIV.model<-function(year, state_values, parameters){
     dD_M = Additive_Diagnosis_rate * U_M + Treatment_rate * A_M  + (Diagnosis_rate * Heterosexual_Men_Sex_Partner_Shift * Insertive_Penile_vaginal_intercourse * D_M * (D_W + U_W)) - 
       AIDS_Progress_rate * D_M - Death_rate* D_M
     
-    dU_M = (1 - Diagnosis_rate) * Heterosexual_Men_Sex_Partner_Shift * Insertive_Penile_vaginal_intercourse * U_M * (D_W + U_W)) - Additive_Diagnosis_rate * U_M - AIDS_Progress_rate * U_M -
+    dU_M = (1 - Diagnosis_rate) * Heterosexual_Men_Sex_Partner_Shift * Insertive_Penile_vaginal_intercourse * U_M * (D_W + U_W) - Additive_Diagnosis_rate * U_M - AIDS_Progress_rate * U_M -
     Death_rate * U_M
       
     dA_M = Additive_Diagnosis_rate * (D_M + U_M) - Treatment_rate * A_M - (Death_rate + AIDS_Death_rate)* A_M
@@ -18,7 +18,7 @@ HIV.model<-function(year, state_values, parameters){
     dD_W = Additive_Diagnosis_rate * U_W + Treatment_rate * A_W + (Diagnosis_rate * Heterosexual_Women_Sex_Partner_Shift * Receptive_Penile_vaginal_intercourse * D_W * (D_M + U_M)) - 
       AIDS_Progress_rate * D_W - Death_rate * D_W
       
-    dU_W = (1 - Diagnosis_rate) * Heterosexual_Women_Sex_Partner_Shift * Receptive_Penile_vaginal_intercourse * U_W * (D_M + U_M)) - 
+    dU_W = (1 - Diagnosis_rate) * Heterosexual_Women_Sex_Partner_Shift * Receptive_Penile_vaginal_intercourse * U_W * (D_M + U_M) - 
            AIDS_Progress_rate * U_W - Death_rate * U_W
       
     dA_W =  Additive_Diagnosis_rate * (D_W + U_W) - Treatment_rate * A_W - (Death_rate + AIDS_Death_rate)* A_W  
@@ -29,7 +29,7 @@ HIV.model<-function(year, state_values, parameters){
     dD_G = Additive_Diagnosis_rate * U_G + Treatment_rate * A_G  + (Diagnosis_rate * Homosexual_Sex_Partner_Shift * Receptive_Anal_intercourse * D_G * (D_G + U_G)) - 
       AIDS_Progress_rate * D_G - Death_rate * D_G
       
-    dU_G = (1 - Diagnosis_rate) * Homosexual_Sex_Partner_Shift * Receptive_Anal_intercourse * U_G * (D_G + U_G)) - Additive_Diagnosis_rate * U_G - AIDS_Progress_rate * U_G -
+    dU_G = (1 - Diagnosis_rate) * Homosexual_Sex_Partner_Shift * Receptive_Anal_intercourse * U_G * (D_G + U_G) - Additive_Diagnosis_rate * U_G - AIDS_Progress_rate * U_G -
   Death_rate * U_G
       
     dA_G = Additive_Diagnosis_rate * (D_G + U_G) - Treatment_rate * A_G - (Death_rate + AIDS_Death_rate)* A_G
