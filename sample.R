@@ -1,18 +1,20 @@
+library(deSolve)
+
 HIV <- function(year, state_values, parameters) {
 
   with(as.list(c(state_values, parameters)),{
     
-    dYm<-  M-(1-tau3)*zeta*Ym+tau3*G-omega1*(1-gamma1)*(1-tau1)*((Iw)/(Iw+Yw))*Ym-d1*Ym
+    dYm<-  M-(1-tau3)*zeta*Ym+tau3*G-omega1*(1-gamma1)*(1-tau1)*((Iw))*Ym-d1*Ym
     
-    dYw<-  W-omega2*(1-gamma1)*(1-tau1)*((Im)/(Im+Ym))*Yw-d1*Yw
+    dYw<-  W-omega2*(1-gamma1)*(1-tau1)*((Im))*Yw-d1*Yw
     
-    dG<-  (1-tau3)*zeta*Ym-tau3*G-(1-gamma2)*(1-tau2)*(omega4)*(Ig/(Ig+G))*G-d1*G
+    dG<-  (1-tau3)*zeta*Ym-tau3*G-(1-gamma2)*(1-tau2)*(omega4)*(Ig)*G-d1*G
     
-    dIm<- omega1*(1-gamma1)*((Iw)/(Iw+Yw))*Ym-d2*Im
+    dIm<- omega1*(1-gamma1)*(Iw)*Ym-d2*Im
     
-    dIw<- omega2*(1-gamma1)*(1-tau1)*((Im)/(Im+Ym))*Yw-d2*Iw                                                                 
+    dIw<- omega2*(1-gamma1)*(1-tau1)*((Im))*Yw-d2*Iw                                                                 
     
-    dIg<- (1-gamma2)*(1-tau2)*(omega4)*(Ig/(Ig+G))*G-d2*Ig               
+    dIg<- (1-gamma2)*(1-tau2)*(omega4)*(Ig)*G-d2*Ig               
     
     return(list(c(dYm, dYw, dG, dIm, dIw, dIg)))
   })
@@ -27,9 +29,9 @@ data
 
 HIV.model = function(data, parameters){ 
   
-  Ym0 <- as.vector(data$total_M - 0.005 * data$total_M )
+  G0 <- as.vector(0.005 * data$total_M)
+  Ym0 <- as.vector(data$total_M) - G0
   Yw0 <- as.vector(data$total_W)
-  G0 <- as.vector(0.005 * data$total_M )
   IM0 <- as.vector(data$Men)
   IW0 <- as.vector(data$Women)
   IG0 <- as.vector(data$Gay)
@@ -45,12 +47,10 @@ HIV.model = function(data, parameters){
   Iw = 25
   Ig = 136
   
-  N_M = Ym + Im
-  N_W = Yw + Im
-  N_G = G +  Ig
+
   
-  init<-c(Ym= Ym/N_M,Yw =Yw/N_W, G =G/N_G,
-          Im = Im/N_M,Iw = Iw/N_W,Ig = Ig/N_G)
+  init<-c(Ym= Ym,Yw =Yw, G =G,
+          Im = Im,Iw = Iw,Ig = Ig)
   
   time<-seq(2000,2018,1)
   
@@ -107,16 +107,14 @@ upper <- rep(1,dimension)
 # upper <- c(0.07,0.01,0.01,0.1,0.000007) 
 
 
+library(GenSA)
+out <- GenSA(lower = lower, upper = upper, fn = HIV.model,
+             control=list(max.time = 300,verbose=TRUE))
 
 
 
-
-
-ode(init, time, HIV,param)
-param<-c(tau1=0,tau2=0,tau3=0,tau4=0,zeta= 0 ,
-         gamma1=0,gamma2=0,omega1=0.8332876,omega2=0.9091849,
-         omega4=0,d1=0.007165862,d2=0.1422957,M=246538,W=257026)
-
+out1<-out[c("value","par","counts")]
+ou1<- as.data.frame(out[c("trace.mat")])
 
 
 
