@@ -1,7 +1,7 @@
 #Simple Interaction Model
 #================================================#
 library(deSolve)
-<<<<<<< HEAD
+
 HIV_R <- function(paramters,N_M0 =19084999, N_W0 = 18258526,M_0=19078308, W_0=18257974, I_M0=6691, I_W0=552 ){
   
   derivs <-function(time,initial,paramters){
@@ -37,7 +37,6 @@ out
 
 =======
 library(GenSA)
->>>>>>> ec04cf1bf57d2c52209eea1a44fbc00ea70d4c9a
 
 #http://27.101.213.4/ageStatMonth.do
 #http://kosis.kr/statHtml/statHtml.do?orgId=101&tblId=DT_2KAA206_OECD
