@@ -123,3 +123,10 @@ plot
 plot1<-plot+geom_line(data = data1[seq(1,22),],aes(x=time,y=value,color=name))+geom_point(aes(color=name))
 plot1
 
+
+
+
+
+
+
+

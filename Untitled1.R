@@ -14,55 +14,91 @@ HIV_data<-cbind(times,M,W,I_M,I_W)
 HIV_data<-data.frame(HIV_data)
 
 
-Report <-c(1,3,9,22,37,52,46,81,69,90,107,104,125,129,186,219,327,397,533,610,680,749,740,797,768,773,888,868,1013,1081,1018,1060,1008,989)
-Years <- seq(1985,2018,1)
-N <- 50000000 # pupulation of the South Korea
+Report <-c(107,104,125,129,186,219,327,397,533,610,680,749,740,797,768,773,888,868,1013,1081,1018,1060,1008,989)
+Years <- seq(1995,2018,1)
+# N <- 50000000 # population of the South Korea
+
+N_M <- 22357352
+N_W <- 22196358
+
+N <- N_M + N_W
+
+M_report <-c(88,93,107,111,160,194,292,363,502,557,640,687,698,743,710,723,827,808,946,1016,974,1000,958,945)
+W_report <-c(19,11,18,18,26,25,35,34,31,53,40,62,42,54,58,50,61,60,67,65,44,60,50,44)
 
 
 
 
 
-old <- par(mfrow = c(1, 2))
-plot(Years, Report, type ="b")
-plot(Years, Report, log = "y")
-abline(lm(log10(Report) ~ Years))
-title("Confirmed infections HIV/AIDS in the South Korea", outer = TRUE, line = -2)
+
+# old <- par(mfrow = c(1, 2))
+# plot(Years, Report, type ="b")
+# plot(Years, Report, log = "y")
+# abline(lm(log10(Report) ~ Years))
+# title("Confirmed infections HIV/AIDS in the South Korea", outer = TRUE, line = -2)
 
 
-SIR <- function(time, state, parameters) {
-  par <- as.list(c(state, parameters))
-  with(par, {
-    dS <- -beta/N * I * S
-    dI <- beta/N * I * S - gamma * I
-    dR <- gamma * I
-    list(c(dS, dI, dR))
+SIR <-function(time,initial,paramters){
+  
+  with(as.list(c(paramters,initial)), {
+
+    dM   <- - alpha * beta  * M * I_W / N   - 0.005825 * M + zeta * I_M
+    dW   <- - delta * gamma * W * I_M / N  - 0.005825 * W + yota * I_W 
+    dI_M <-                      alpha * beta  *  M  * I_W / N  - 0.005825 * I_M - 0.1642 * I_M -  zeta * I_M
+    dI_W <-                      delta * gamma *  W  * I_M / N     - 0.005825 * I_W - 0.1642 * I_W -  yota * I_W
+    
+    return(list(c(dM,dW,dI_M,dI_W)))
   })
 }
 
+
+
 library(deSolve)
-init <- c(S = N-Report[1], I = Report[1], R = 0)
+
+init <- c(M = N_M - M_report[1], I_M = M_report[1], W = N_W - W_report[1], I_W = W_report[1])
+
 RSS <- function(parameters) {
-  names(parameters) <- c("beta", "gamma")
+  parameters<-c(0.5, 0.5, 0.5, 0.5,0.5,0.5)
+  names(parameters) <- c("alpha","beta","delta", "gamma","zeta","yota")
+  
   out <- ode(y = init, times = Years, func = SIR, parms = parameters)
-  fit <- out[ , 3]
-  sum((Infected - fit)^2)
+  
+  fit1 <- out[ , 3]
+  
+  fit2 <- out[ , 5]
+  
+  A <- sum((M_report - fit1) ^ 2)
+  B <- sum((W_report - fit2) ^ 2)
+  A
+
 }
 
-Opt <- optim(c(0.5, 0.5), RSS, method = "L-BFGS-B", lower = c(0, 0), upper = c(1, 1)) # optimize with some sensible conditions
+
+library(GenSA)
+
+dimension <- 6
+lower <- rep(0, dimension)
+upper <- rep(1, dimension)
+
+out <- GenSA(lower = lower, upper = upper, fn = RSS,control=list(max.time = 10, verbose=TRUE))
+
+
+
+Opt <- optim(c(0.5, 0.5, 0.5, 0.5,0.5,0.5), RSS, method = "L-BFGS-B", lower = c(0,0,0,0,0,0), upper = c(1,1,1,1,1,1)) # optimize with some sensible conditions
 Opt$message
 
 
-Opt_par <- setNames(Opt$par, c("beta", "gamma"))
+Opt_par <- setNames(Opt$par,  c("alpha","beta","delta", "gamma","zeta","yota"))
 print(Opt_par)
 
-t <- 1:90 # time in days
+t <- 1995:2020 # time in days
 fit <- data.frame(ode(y = init, times = t, func = SIR, parms = Opt_par))
 col <- 1:3 # colour
 print(fit) 
 matplot(fit$time, fit[ , 2:4], type = "l", xlab = "Day", ylab = "Number of subjects", lwd = 2, lty = 1, col = col)
 matplot(fit$time, fit[ , 2:4], type = "l", xlab = "Day", ylab = "Number of subjects", lwd = 2, lty = 1, col = col, log = "y")
 
-points(Day, Infected)
+points(Years, Report)
 legend("bottomright", c("Susceptibles", "Infecteds", "Recovereds"), lty = 1, lwd = 2, col = col, inset = 0.05)
 title("Predicted Cases 2019-nCoV UK (worst case)", outer = TRUE, line = -2)
 
