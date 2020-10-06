@@ -1,3 +1,7 @@
+# 15-64세 기준
+# 성접촉으로 인힌한 감염만 고려 
+
+
 
 # HIV mathematical model
 
@@ -13,7 +17,7 @@ Expansion <- function(year, state_values, parameters) {
     dN_G = zeta * S_M  - tau_3 * (S_G + UD_G + ID_G + A_G) - d_1 * ( S_G + ID_G + UD_G + A_G) -  d_2 * A_G
     
     # Suceptible Population
-    dS_M = (N_M +N_G) * kappa - zeta * S_M + tau_3 * S_G - (1-tau_1) * (1-gamma_1) * (1-omega_1) * eta_1 * phi * UD_W * S_M /N_W -
+    dS_M = (N_M + N_G) * kappa - zeta * S_M + tau_3 * S_G - (1-tau_1) * (1-gamma_1) * (1-omega_1) * eta_1 * phi * UD_W * S_M /N_W -
       (1-tau_1) * (1-gamma_1) * (1-omega_1) * eta_1 * (1-phi) * UD_W * S_M /N_W - d_1 * S_M
     
     dS_W = N_W * kappa - (1-tau_1) * (1-gamma_1) * (1-omega_2) * eta_1 * phi * UD_M * S_W /N_M -
@@ -50,18 +54,18 @@ Expansion <- function(year, state_values, parameters) {
     dA_G = beta * (UD_G + ID_G) - theta * A_G - (d_1+ d_2) * A_G - tau_3 * A_G 
     
     
-    dD = d_1 *(S_M + S_W + S_G + ID_M + ID_W + ID_G + UD_M + UD_W + UD-G + A_M + A_W + A_G) + d_2 * (A_M + A_W + A_G)
+    # dD = d_1 *(S_M + S_W + S_G + ID_M + ID_W + ID_G + UD_M + UD_W + UD_G + A_M + A_W + A_G) + d_2 * (A_M + A_W + A_G)
 
     
-    return(list(c(dN_M,dN_W,dN_G,dS_M,dS_W,dS_G,dID_M,dID_W,dID_G,dUD_M,dUD_W,dUD_G,dA_M,dA_W,dA_G,dD)))
+    return(list(c(dN_M,dN_W,dN_G,dS_M,dS_W,dS_G,dID_M,dID_W,dID_G,dUD_M,dUD_W,dUD_G,dA_M,dA_W,dA_G)))
   })
 }
 
 # Load Data
 
-library(readr)
-data <- read_csv("Documents/GitHub/Mathematical-modeling/sample.csv")
-data<-as.data.frame(data)
+# library(readr)
+# data <- read_csv("Documents/GitHub/Mathematical-modeling/sample.csv")
+# data<-as.data.frame(data)
 
 # Load Data
 
@@ -92,27 +96,17 @@ A_M = 0
 A_W = 0
 A_G = 0
 
+D=0
+
 
 
 init<-c(N_M,N_W,N_G,S_M,S_W,S_G,ID_M,ID_W,ID_G,UD_M,UD_W,UD_G,A_M,A_W,A_G)
 
 times <-seq(1995,2018,1)
 
+library(deSolve)
+
 out <-ode(y=init, parms=param, times = times, func = Expansion)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
