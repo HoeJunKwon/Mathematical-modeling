@@ -1,5 +1,6 @@
-Men <-c(6691,7436,8248,9010,9788,10489,11236) # 2012~2018 생존감염자  15-64
-Women <-c(552,593,624,658,690,716,742) # 2012~2018 생존감염자  15-64
+
+Survival_Men <-c(6691,7436,8248,9010,9788,10489,11236) # 2012~2018 생존감염자  15-64
+Survival_Women <-c(552,593,624,658,690,716,742) # 2012~2018 생존감염자  15-64
  
 Men_Report <-c(776,912,974,937,957,913,896) # 2012~2018 Men Report  15-64
 Women_Report <-c(56,59,56,42,53,45,42) # 2012~2018 생존감염자  15-64
@@ -27,6 +28,60 @@ Death_rate_Women <-c(0.00071,0.00102,0.00141,0.00206,0.00280,0.00386,0.00542,0.0
 
 Death_rate_Men <-c(0.00125,0.00199,0.00264,0.00355,0.00499,0.00743,0.01223,0.01934,0.02852,0.04138,0.06352) # 2018
 Death_rate_Women <-c(0.00084,0.00129,0.00147,0.00216,0.00292,0.00387,0.00538,0.00755,0.01009,0.01457,0.02400) # 2018
+
+
+Total_Men <-c(19084999,19142958,19192036,19263033,19305761,19230937,19183985) # 2012~2018 15-64
+Total_Women <-c(18258526,18314400,18360874,18429691,18478656,18405536,18363056) # 2012~2018 15-64
+Total_MSM <-Total_Men * 0.11
+
+
+2105725/2099350
+2111124/2105725
+2118934/2111124
+2123634/2118934
+2115403/2123634
+2110238/2115403
+
+
+# 2028년 까지 인구 증가 2029년 부터 인구 감소 시작 (중위 추계 통계청 장래인구특별추계: 2017~2067년 )
+# 2017~ 2040 인구성장률 
+
+# growth_Rate1 <-c(1.0020,1.0014,1.0008,1.0005,1.0004,1.0004,1.0003,1.0003,1.0002,1.0002,1.0000,0.9997) # 2019~ 2030
+# # growth_Rate2 <-c(1.0000,0.9997,0.9995,0.9992,0.9989,0.9985,1.0018,0.9962) #2029,2030,2031,2032,2033,2034,2035,2040
+# 
+# total_Men <- rep(0,13)
+# total_Women <- rep(0,13)
+# total_Men[1] <- Total_Men[7]
+# total_Women[1] <- Total_Women[7]
+# 
+# 
+# 
+# 
+# for( i in  1:length(growth_Rate1)) {
+#   total_Men[i+1] <- total_Men[i] * growth_Rate1[i]
+#   total_Women[i+1] <- total_Women[i] * growth_Rate1[i]
+# }
+# 
+# prediction_population_Men <- total_Men
+# prediction_population_Women <- total_Women
+# prediction_population_MSM <-total_Men * 0.011
+# 
+# 
+# 
+# present_prediction_population_Men <- Total_Men + prediction_population_Men
+# present_prediction_population_Women <- total_Women + prediction_population_Women
+# present_prediction_population_MSM <- Total_Men * 0.011 + prediction_population_MSM
+
+
+
+
+
+
+
+
+
+
+
 
 
 library(deSolve)
