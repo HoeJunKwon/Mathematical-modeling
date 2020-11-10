@@ -1,7 +1,7 @@
 #================================================#
 #================================================#
 
-
+library(ggplot2)
 require(mkin)
 require(GenSA)
 require(deSolve)
@@ -97,6 +97,7 @@ df<- function(t, y, parameters) {
   d_m1 <- parameters[2]*y[1] - parameters [3]* y [2]
   return(list(c(d_parent, d_m1)))
 }
+
 tspan = if (!is.null(FOCUS_2006_D)) sort(unique(FOCUS_2006_D [["time"]])) else NULL
 y0<-c(99.598491,0)
 parameters<-c("k_parent_sink" = 0.047920, "k_parent_m1" = 0.050778, "k_m1_sink" = 0.005261)
