@@ -13,17 +13,31 @@ survival_infected_Women,2015,658
 survival_infected_Women,2016,690
 survival_infected_Women,2017,719
 survival_infected_Women,2018,742
-Suceptible_Men,2012,19078308
-Suceptible_Men,2013,19135522
-Suceptible_Men,2014,19183788
-Suceptible_Men,2015,19254023
-Suceptible_Men,2016,19295973
-Suceptible_Men,2017,19220448
-Suceptible_Men,2018,19172749
-Suceptible_Women,2012,18257974
-Suceptible_Women,2013,18313807
-Suceptible_Women,2014,18360250
-Suceptible_Women,2015,18429033
-Suceptible_Women,2016,18477966
-Suceptible_Women,2017,18404820
-Suceptible_Women,2018,18362314
+Suceptible Men,2012,19078308
+Suceptible Men,2013,19135522
+Suceptible Men,2014,19183788
+Suceptible Men,2015,19254023
+Suceptible Men,2016,19295973
+Suceptible Men,2017,19220448
+Suceptible Men,2018,19172749
+Suceptible Women,2012,18257974
+Suceptible Women,2013,18313807
+Suceptible Women,2014,18360250
+Suceptible Women,2015,18429033
+Suceptible Women,2016,18477966
+Suceptible Women,2017,18404820
+Suceptible Women,2018,18362314
+Fit  Suceptible Men,2012,19078308
+Fit  Suceptible Men,2013,19103625.4
+Fit  Suceptible Men,2014,19128862.1
+Fit  Suceptible Men,2015,19154008.2
+Fit  Suceptible Men,2016,19179052.7
+Fit  Suceptible Men,2017,19203983.6
+Fit  Suceptible Men,2018,19228787.8
+Fit  Suceptible Women,2012,18257974
+Fit  Suceptible Women,2013,18275146.69
+Fit  Suceptible Women,2014,18292319.45
+Fit  Suceptible Women,2015,18309492.18
+Fit  Suceptible Women,2016,18326664.74
+Fit  Suceptible Women,2017,18343837.04
+Fit  Suceptible Women,2018,18361009
