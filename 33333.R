@@ -206,11 +206,13 @@ plot_base1 <-ggplot(data = Data1[c(1:7),],aes(x=Year,y=population))+geom_point(a
 
 plot_base <- plot_base1 + geom_point(data = Data1[c(8:14),],aes(x=Year,y=population,color=Name),size = 0.5) + 
   geom_line(data = Data1[c(8:14),],aes(x=Year,y=population,color=Name),size = 0.5) + theme_classic()  +
-  theme(legend.position = c(0.1, 0.8),legend.background=element_rect(fill="white", color="black"))+
+  theme(legend.position = c(0.15, 0.8),legend.background=element_rect(fill="white", color="black"),legend.text = element_text(size=13),
+        axis.title=element_text(size=15),axis.text.x = element_text(size=15),axis.text.y = element_text(size=15))+
   guides(color=guide_legend(title = NULL))
 
 
 plot_base 
+
 
 
 
@@ -226,7 +228,7 @@ plot <-plot_base +geom_point(data = Data3,aes(x=Year,y=population,color=Name),si
 
 plot_prev <- plot + geom_point(data = Data4,aes(x=Year,y=population,color=Name),size = 0.5) + 
   geom_line(data = Data4,aes(x=Year,y=population,color=Name),size=0.5) + 
-  theme(legend.position = c(0.1, 0.8)) +
+  theme(legend.position = c(0.125, 0.8)) +
   scale_x_continuous(breaks=seq(2012,2038,2))
 
   
