@@ -162,15 +162,39 @@ Women
 ####
 
 library(readr)
-Data <-as.data.frame(read_csv(" Users/victoria/Documents/GitHub/Mathematical-modeling/Data.csv" ))
+Data <- read_csv("Documents/GitHub/Mathematical-modeling/Data.csv")
 Data1 <- Data[seq(1:14),]
 
-Data2 <- Data[c(15:28),]
-
-plot<-ggplot(data = Data2,aes(x=Year,y=population))+geom_point(aes(color=Name))
-plot
+Data2 <- Data[c(15,28),]
 
 
+S_Men <-ode(init, Years, sex_oriented,parameter)[,2] +ode(init, Years, sex_oriented,parameter)[,4]
+S_Women <-ode(init, Years, sex_oriented,parameter)[,3] 
+# 
+# write.csv(S_Men,"/Users/victoria/Downloads/S_Men.csv")
+# write.csv(S_Women,"/Users/victoria/Downloads/S_Women.csv")
+# 
+
+
+
+Data3 <- Data[seq(15,21),]
+Data4 <- Data[seq(22,28),]
+Data5 <- Data[seq(29,35),]
+Data6 <- Data[seq(36,42),]
+
+plot_base1 <-ggplot(data = Data3,aes(x=Year,y=population))+geom_point(aes(color=Name),size = 0.5) + 
+  geom_line(data = Data3,aes(x=Year,y=population))+geom_point(aes(color=Name), size=0.5) 
+
+plot_base <- plot_base1 + geom_point(data = Data4,aes(x=Year,y=population,color=Name),size = 0.5) + theme_classic()  +
+  theme(legend.position = c(0.15, 0.8),legend.background=element_rect(fill="white", color="black"),legend.text = element_text(size=13),
+        axis.title=element_text(size=15),axis.text.x = element_text(size=15),axis.text.y = element_text(size=15))+
+  guides(color=guide_legend(title = NULL)) + geom_line(data = Data4,aes(x=Year,y=population,color=Name),size = 0.5)
+
+
+q <-plot_base  + geom_point(data = Data5,aes(x=Year,y=population,color=Name)) + 
+  geom_line(data = Data5,aes(x=Year,y=population,color=Name),size = 0.5)  +
+  geom_point(data = Data6,aes(x=Year,y=population,color=Name)) + 
+  geom_line(data = Data6,aes(x=Year,y=population,color=Name),size = 0.5)
 
 
 
@@ -205,14 +229,6 @@ plot1 <- plot + geom_line(data = Data2,aes(x=Year,y=population,color=Name))
 plot1
 
 
-
-
-
-
-
-
-
-
 ## Current Situation
 
 Data1 <- Data[c(1:14),]
@@ -230,11 +246,6 @@ plot_base  + geom_point(data = Data2[c(1:7),],aes(x=Year,y=population,color=Name
   geom_line(data = Data2[c(1:7),],aes(x=Year,y=population,color=Name),size = 0.5)  +
   geom_point(data = Data2[c(8:14),],aes(x=Year,y=population,color=Name)) + 
   geom_line(data = Data2[c(8:14),],aes(x=Year,y=population,color=Name),size = 0.5)
-
-
-
-
-
 
 
 
