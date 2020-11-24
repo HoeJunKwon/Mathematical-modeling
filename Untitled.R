@@ -159,6 +159,20 @@ Women <-ode(init, Years, sex_oriented,parameter)[,6] +ode(init, Years, sex_orien
 Men
 Women
 
+(mean((Men/Survival_Men)[1:6]) + (Survival_Men/Men)[7])/2
+(mean((Women/Survival_Women)[1:6]) + (Survival_Women/Women)[7])/2
+
+
+sample <-as.data.frame(read_csv("C:/Users/Monokuma/Desktop/sample.csv"))
+
+ggplot(data=sample, aes(x=Sex,y= Ratio,fill = Sex))+
+  geom_boxplot(fill='slategrey',color='darkslategrey',width=0.3)+
+theme_classic(base_size = 20)
+
+
+
+
+
 ####
 
 library(readr)
